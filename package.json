@@ -1,7 +1,7 @@
 {
   "name": "coffee-express-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Coffee-express-client Github repository link: https://github.com/Praneshchow/Coffee-express-client",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -15,5 +15,13 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "mongodb": "^6.7.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Praneshchow/Coffee-express-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Praneshchow/Coffee-express-server/issues"
+  },
+  "homepage": "https://github.com/Praneshchow/Coffee-express-server#readme"
 }

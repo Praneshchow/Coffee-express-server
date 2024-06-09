@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 require('dotenv').config()
@@ -30,17 +30,58 @@ async function run() {
 
     const coffeeCollection = client.db('coffeeDB').collection('coffee');
 
+    // Get (read the all data)
     app.get('/coffee', async(req, res) =>{
       const cursor = coffeeCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     })
 
+    // Get (read the single data) 
+    app.get('/coffee/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await coffeeCollection.findOne(query);
+      res.send(result);
+    })
+
+    // update the data. 
+    app.put('/coffee/:id', async(req, res) => {
+      const id= req.params.id;
+      const filter = {_id: new ObjectId(id)};
+      const options = {upsert: true};
+      const updatedCoffee = req.body;
+      const coffee = {
+        $set: {
+          name: updatedCoffee.name, 
+          quantity: updatedCoffee.quantity,
+          supplier: updatedCoffee.supplier,
+          taste: updatedCoffee.taste,
+          category: updatedCoffee.category,
+          details: updatedCoffee.details,
+          photo: updatedCoffee.photo,
+        }
+      }
+      const result = await coffeeCollection.updateOne(filter, coffee, options);
+      res.send(result);
+    })
+
+    // Post (insert data) 
     app.post('/coffee', async(req, res) => {
       const newCoffee = req.body;
-      console.log(newCoffee);
+      // console.log(newCoffee);
       const result = await coffeeCollection.insertOne(newCoffee);
       res.send(result); 
+    })
+
+    // Delete data. 
+    app.delete('/coffee/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id)};
+      // console.log("query: ", query);
+      const result = await coffeeCollection.deleteOne(query);
+      // console.log("result: ", result);
+      res.send(result);
     })
 
     // Send a ping to confirm a successful connection
@@ -52,7 +93,6 @@ async function run() {
   }
 }
 run().catch(console.dir);
-
 
 
 app.get('/', (req, res) => {
